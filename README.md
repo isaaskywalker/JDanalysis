@@ -58,6 +58,21 @@ flowchart TD
     F --> J["요구사항별 경험 대조"]
     I --> J
     J --> K["fit 결론·근거·격차"]
+
+    classDef default font-size:15px,color:#172033
+    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033,font-size:15px
+    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033,font-size:15px
+    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033,font-size:15px
+    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033,font-size:15px
+    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033,font-size:15px
+    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033,font-size:15px
+    linkStyle default font-size:15px
+    class A input
+    class B,C,F,I process
+    class D,G decision
+    class E,H supplement
+    class J model
+    class K result
 ```
 
 공고가 없거나 이력서를 읽지 못했으면 개인 적합성을 만들어내지 않습니다. 일부만 읽었다면 결론도 잠정으로 표시합니다.
@@ -100,6 +115,21 @@ flowchart TD
     G --> H["이력서 PDF·DOCX 등"]
     H --> A
     A --> I["JD–이력서 비교 결과"]
+
+    classDef default font-size:15px,color:#172033
+    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033,font-size:15px
+    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033,font-size:15px
+    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033,font-size:15px
+    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033,font-size:15px
+    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033,font-size:15px
+    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033,font-size:15px
+    linkStyle default font-size:15px
+    class A model
+    class B decision
+    class C,D,G process
+    class E,H input
+    class F supplement
+    class I result
 ```
 
 - **수집:** Python parser가 원본 URL과 추적 파라미터를 정리한 URL을 시도합니다. 사람인의 `rec_idx`와 일반 사이트의 기능 파라미터는 보존합니다.

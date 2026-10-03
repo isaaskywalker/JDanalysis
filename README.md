@@ -68,6 +68,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -PythonPath "C
 
 `install-job-parser-mac.command`는 저장소를 내려받기 전에 사용할 수 있는 독립 설치 파일입니다. 기본 설치 위치는 `~/Documents/JobPostingGPT`입니다. 저장소를 clone했다면 `install.sh`를 사용하면 됩니다.
 
+## 회사별 이력서 DOCX 생성
+
+fit 분석 이후 회사의 업무 표현에 맞춘 수정본을 생성합니다. Codex에 “이력서와 JD를 비교한 뒤 회사별 이력서 DOCX와 변경 내역을 만들어줘”라고 요청하세요.
+
+- DOCX 원본은 문단 단위로 수정해 문단·표·페이지 설정을 유지합니다. 수정 문단의 혼합 서식과 페이지 나눔은 달라질 수 있습니다. 그림·필드·하이퍼링크가 있는 문단은 자동 수정하지 않습니다.
+- PDF·이미지는 읽은 내용을 새 DOCX로 재구성합니다. 원본 디자인을 복제하지 않습니다.
+- 원본은 유지하고 results/ 아래에 회사명_직무명_이력서.docx와 회사명_직무명_변경내역.md를 생성합니다.
+- 원문 인용과 숫자를 검사하며, Codex가 책임 범위·성과·누락 등 의미상 일치도 검토합니다. 경험이나 수치를 새로 만들지 않습니다.
+- JD가 불완전하거나 이력서를 못 읽으면 생성을 보류합니다. 낮은 fit이나 필수 조건의 격차를 문구 수정으로 감추지 않습니다.
+- 렌더링 도구가 있으면 모든 페이지를 시각 검토합니다. 없으면 시각 검증 미완료를 알리고 Word에서 확인하도록 안내합니다.
+
+기존 설치는 git pull 후 install.sh 또는 install.ps1을 다시 실행해 DOCX 의존성을 추가하세요. 독립 macOS .command 파일은 초기 fit 분석용 패키지이므로 최신 DOCX 기능은 저장소 설치 파일을 사용합니다.
+
 ## 워크플로우
 
 ```mermaid
@@ -85,6 +98,12 @@ flowchart TD
     F --> J["요구사항별 경험 대조"]
     I --> J
     J --> K["fit 결론·근거·격차"]
+    K --> L{"수정본 생성 요청?"}
+    L -->|"예"| M["회사 언어로 수정안 작성"]
+    M --> N["원문 근거와 사실 대조"]
+    N --> O["DOCX와 변경 내역 생성"]
+    O --> P["문서 검토 후 전달"]
+    L -->|"아니요"| Q["fit 결과 전달"]
 
     classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033
     classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033
@@ -97,7 +116,9 @@ flowchart TD
     class D,G decision
     class E,H supplement
     class J model
-    class K result
+    class K,O,P,Q result
+    class L decision
+    class M,N process
 ```
 
 공고가 없거나 이력서를 읽지 못했으면 개인 적합성을 만들어내지 않습니다. 일부만 읽었다면 결론도 잠정으로 표시합니다.
@@ -140,6 +161,11 @@ flowchart TD
     G --> H["이력서 PDF·DOCX 등"]
     H --> A
     A --> I["JD–이력서 비교 결과"]
+    I --> J["Codex · 근거가 있는 수정 계획"]
+    J --> K["resume_docx.py · 검증과 저장"]
+    H --> K
+    K --> L["DOCX와 변경 내역"]
+    L --> M["문서 검토"]
 
     classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033
     classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033
@@ -152,7 +178,9 @@ flowchart TD
     class C,D,G process
     class E,H input
     class F supplement
-    class I result
+    class I,L result
+    class J model
+    class K,M process
 ```
 
 - **수집:** Python parser가 원본 URL과 추적 파라미터를 정리한 URL을 시도합니다. 사람인의 `rec_idx`와 일반 사이트의 기능 파라미터는 보존합니다.
@@ -160,6 +188,8 @@ flowchart TD
 - **검증:** parser의 키워드 검사는 영역이 있는지 알려주는 힌트입니다. 전문 확보 여부는 Codex가 실제 내용을 확인한 뒤 판정합니다.
 - **분석:** 스킬 지침에 따라 JD와 이력서를 비교합니다. 판정은 모델의 해석이므로 같은 입력에서도 결과가 달라질 수 있습니다.
 - **연결:** 기본 경로는 로컬 스크립트 호출입니다. 원격 MCP나 상시 실행 서버는 필요하지 않습니다. 선택적 stdio MCP 진입점은 소스에 있지만 기본 설치에는 MCP 패키지를 설치하지 않습니다.
+
+DOCX 생성은 [resume_docx.py](.agents/skills/job-posting-analysis/scripts/resume_docx.py)가 맡고, [생성 계약](.agents/skills/job-posting-analysis/references/resume-docx.md)에 따라 Codex가 수정 계획을 작성합니다.
 
 핵심 파일은 [분석 스킬](.agents/skills/job-posting-analysis/SKILL.md), [공고 parser](.agents/skills/job-posting-analysis/scripts/parser.py), [실행 안내](.agents/skills/job-posting-analysis/references/parser-runtime.md)입니다.
 
@@ -180,6 +210,8 @@ python3 -m unittest discover -s tests -v
 ```
 
 개발 환경에서는 Chromium 다운로드가 실패해 실제 잡코리아·사람인 공고의 전체 수집을 검증하지 못했습니다. macOS·Windows 설치와 이력서 대조도 아직 전체 과정을 검증하지 못했습니다. Windows 설치 파일의 실제 PowerShell 실행은 개발 환경에서 확인하지 못했습니다. `install.sh`의 브라우저 확인은 실행 가능 여부를 검사하며, 채용 사이트 접근 성공까지 보장하지 않습니다.
+
+DOCX 재구성·문단 수정, 원본 보존, 근거 오류·신규 숫자·불완전 JD 거부의 테스트 5개가 통과했습니다. 한글 샘플 DOCX를 렌더링해 글자와 배치를 확인했습니다. 실제 지원자의 문서와 macOS·Windows 전체 실행은 별도 검증이 필요합니다.
 
 ## 이력서 관리
 

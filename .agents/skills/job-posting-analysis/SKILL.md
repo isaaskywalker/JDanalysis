@@ -11,9 +11,17 @@ description: Compare resumes with job descriptions to assess personal fit, disco
 
 ## 로컬 Codex 실행
 
-이 스킬은 설치한 맥의 로컬 Codex에서 실행한다. 스킬 디렉터리의 절대 경로에서 프로젝트 루트(상위 3단계)를 찾는다. 프로젝트의 `.venv/bin/python`과 이 스킬의 `scripts/parser.py`를 사용해 URL을 하나의 인수로 전달하고 JSON을 읽는다. 셸 인젝션을 피하기 위해 인수 배열 또는 안전한 셸 인용을 사용한다. 사용자 URL을 셸 코드로 실행하지 않는다. 작업 디렉터리나 스킬 디렉터리에 공백이 있으면 경로를 반드시 인용한다.
+이 스킬은 macOS 또는 Windows의 로컬 Codex에서 실행한다. 스킬 디렉터리의 절대 경로에서 프로젝트 루트(상위 3단계)를 찾는다. 운영체제를 확인해 macOS는 프로젝트의 `.venv/bin/python`, Windows는 `.venv/Scripts/python.exe`를 선택한다. 선택한 Python과 이 스킬의 `scripts/parser.py`를 사용해 URL을 하나의 인수로 전달하고 JSON을 읽는다. 셸 인젝션을 피하기 위해 인수 배열 또는 안전한 셸 인용을 사용한다. 사용자 URL을 셸 코드로 실행하지 않는다. 작업 디렉터리나 스킬 디렉터리에 공백이 있으면 경로를 반드시 인용한다.
 
 예: 프로젝트 폴더에서 `.venv/bin/python .agents/skills/job-posting-analysis/scripts/parser.py 'https://www.jobkorea.co.kr/Recruit/GI_Read/50081355'`를 실행한다. 실패하면 오류를 사용자에게 알리고 기존 폴백 절차를 수행한다. 별도 API 키·유료 서버·원격 MCP는 필요하지 않으며 분석은 현재 Codex 모델로 수행한다. 실제 parser 실행이 성공하지 않았으면 전문을 읽었다고 주장하지 않는다.
+
+Windows PowerShell에서는 프로젝트 폴더에서 다음 형태로 실행한다. 가상환경 활성화는 필요하지 않다.
+
+```powershell
+& '.\.venv\Scripts\python.exe' '.\.agents\skills\job-posting-analysis\scripts\parser.py' 'https://www.jobkorea.co.kr/Recruit/GI_Read/50081355'
+```
+
+권한이나 브라우저 시작 오류가 나면 실제 오류 로그로 실행 환경 제한과 사이트 접근 실패를 구분한다. 관리자 권한이 반드시 필요하다고 단정하지 않는다.
 
 ## 범용 브라우저 parser 우선 경로
 
@@ -199,7 +207,7 @@ C를 A처럼 쓰지 않는다.
 
 분석의 목적은 사용자가 이 직무에 적합한지 판단하는 것이다. 포트폴리오 작성·배치·표현 예시는 사용자가 별도로 요청한 경우에만 제공한다.
 
-로컬 실행 시 스킬 경로에서 프로젝트 루트를 확인하고 JobPostingGPT 폴더의 최상위와 `resumes/`, `이력서/` 하위에서 이력서 후보를 찾는다. 확장자는 PDF, DOCX, TXT, MD, 이미지이며 파일명 resume, CV, 이력서, 경력기술서 및 사용자가 명시한 파일을 우선한다. `.venv`, `.agents`, 백업·캐시·분석 결과 폴더는 제외한다. 무관한 파일이나 프로젝트 밖을 탐색하지 않는다.
+로컬 실행 시 스킬 경로에서 프로젝트 루트를 확인하고 프로젝트 폴더(JDanalysis 또는 JobPostingGPT)의 최상위와 `resumes/`, `이력서/` 하위에서 이력서 후보를 찾는다. 확장자는 PDF, DOCX, TXT, MD, 이미지이며 파일명 resume, CV, 이력서, 경력기술서 및 사용자가 명시한 파일을 우선한다. `.venv`, `.agents`, 백업·캐시·분석 결과 폴더는 제외한다. 무관한 파일이나 프로젝트 밖을 탐색하지 않는다.
 
 - 사용자가 특정 파일을 지정하면 해당 파일을 사용한다. 후보가 하나면 읽고 이름을 밝힌다. 여러 이력서·버전이면 어느 것을 기준으로 할지 질문한다. 수정일만 보고 최신 이력서라고 단정하지 않는다. 보충 경력기술서는 이력서와 함께 사용할 수 있으나 충돌은 표시한다.
 - PDF는 모든 페이지의 텍스트와 표를 확인한다. 이미지·스캔형이면 가능한 시각/OCR 도구로 읽고 읽지 못한 부분을 알린다. DOCX는 단락과 표를 확인한다. 파일을 못 읽었으면 읽었다고 주장하지 않는다.

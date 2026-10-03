@@ -10,6 +10,8 @@
 
 Python 3.10 이상과 로컬 Codex가 필요합니다. 설치 과정에서 Python 패키지와 Chromium을 다운로드합니다.
 
+### macOS
+
 ```bash
 git clone https://github.com/isaaskywalker/JDanalysis.git
 cd JDanalysis
@@ -22,6 +24,31 @@ macOS에서 `python3`가 3.9.6이라면 새 Python을 설치한 뒤 해당 실�
 brew install python@3.12
 JOB_PARSER_PYTHON="$(brew --prefix python@3.12)/bin/python3.12" bash install.sh
 ```
+
+### Windows
+
+Python 3.10 이상과 Git을 설치하고 PowerShell에서 실행합니다. 저장소의 **Code → Download ZIP**으로 내려받아 압축을 풀었다면 clone 단계는 생략합니다.
+
+```powershell
+git clone https://github.com/isaaskywalker/JDanalysis.git
+cd JDanalysis
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+실행 정책 예외는 이 명령으로 시작한 PowerShell 프로세스에만 적용됩니다. 시스템 정책은 변경하지 않으며 관리자 권한을 기본 요구하지 않습니다. 조직 정책이 실행을 차단하면 해당 정책을 따라야 합니다.
+
+Python을 자동으로 찾지 못하면 설치한 실행 파일을 지정합니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -PythonPath "C:\경로\python.exe"
+```
+
+설치가 끝나면 macOS와 동일하게 로컬 Codex에서 저장소 폴더를 열고, 이력서를 넣은 뒤 JD 비교를 요청합니다. 가상환경 활성화는 필요하지 않습니다.
+
+| 운영체제 | 설치 파일 | parser에 사용하는 Python |
+|---|---|---|
+| macOS | `install.sh` | `.venv/bin/python` |
+| Windows | `install.ps1` | `.venv\Scripts\python.exe` |
 
 설치가 끝나면 로컬 Codex에서 **이 저장소 폴더**를 엽니다. 브라우저 실행이 Codex의 제한된 실행 환경에서 막히면 실제 오류를 확인하고, 해당 실행에 필요한 승인을 진행합니다. 권한 오류와 사이트 접근 차단은 구분해야 합니다.
 
@@ -156,7 +183,7 @@ URL 정규화, 사람인 공고 ID 보존, 기능 파라미터 유지, 보수적
 python3 -m unittest discover -s tests -v
 ```
 
-개발 환경에서는 Chromium 다운로드가 실패해 실제 잡코리아·사람인 공고의 전체 수집을 검증하지 못했습니다. macOS 설치·이력서 대조도 아직 전체 과정을 검증하지 못했습니다. `install.sh`의 브라우저 확인은 실행 가능 여부를 검사하며, 채용 사이트 접근 성공까지 보장하지 않습니다.
+개발 환경에서는 Chromium 다운로드가 실패해 실제 잡코리아·사람인 공고의 전체 수집을 검증하지 못했습니다. macOS·Windows 설치와 이력서 대조도 아직 전체 과정을 검증하지 못했습니다. Windows 설치 파일의 실제 PowerShell 실행은 개발 환경에서 확인하지 못했습니다. `install.sh`의 브라우저 확인은 실행 가능 여부를 검사하며, 채용 사이트 접근 성공까지 보장하지 않습니다.
 
 ## 이력서 관리
 

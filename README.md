@@ -86,14 +86,12 @@ flowchart TD
     I --> J
     J --> K["fit 결론·근거·격차"]
 
-    classDef default font-size:15px,color:#172033
-    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033,font-size:15px
-    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033,font-size:15px
-    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033,font-size:15px
-    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033,font-size:15px
-    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033,font-size:15px
-    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033,font-size:15px
-    linkStyle default font-size:15px
+    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033
+    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033
+    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033
+    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033
+    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033
+    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033
     class A input
     class B,C,F,I process
     class D,G decision
@@ -143,14 +141,12 @@ flowchart TD
     H --> A
     A --> I["JD–이력서 비교 결과"]
 
-    classDef default font-size:15px,color:#172033
-    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033,font-size:15px
-    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033,font-size:15px
-    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033,font-size:15px
-    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033,font-size:15px
-    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033,font-size:15px
-    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033,font-size:15px
-    linkStyle default font-size:15px
+    classDef input fill:#DBEAFE,stroke:#2563EB,color:#172033
+    classDef process fill:#CCFBF1,stroke:#0D9488,color:#172033
+    classDef decision fill:#FEF3C7,stroke:#D97706,color:#172033
+    classDef supplement fill:#FFEDD5,stroke:#EA580C,color:#172033
+    classDef result fill:#DCFCE7,stroke:#16A34A,color:#172033
+    classDef model fill:#E0E7FF,stroke:#4F46E5,color:#172033
     class A model
     class B decision
     class C,D,G process

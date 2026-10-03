@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+.install-backups/
+resumes/*
+!resumes/.gitkeep
+이력서/
+results/
+*.pdf
+*.docx
+*.doc
+*.hwp
+*.hwpx
